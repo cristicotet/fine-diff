@@ -1,7 +1,7 @@
 <?php
 
 /**
- * FINE granularity DIFF
+ * FINE granularity DIFF.
  *
  * Computes a set of instructions to convert the content of
  * one string into another.
@@ -11,8 +11,11 @@
  *
  * @copyright Copyright 2011 (c) Raymond Hill (http://raymondhill.net/blog/?p=441)
  * @copyright Copyright 2013 (c) Robert Crowe (http://iphis.com)
+ *
  * @link https://github.com/iphis/FineDiff
+ *
  * @version 0.0.1
+ *
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -26,7 +29,7 @@ abstract class Renderer implements RendererInterface
     /**
      * Covert text based on the provided opcodes.
      *
-     * @param string $from_text
+     * @param string                                         $from_text
      * @param string|\iphis\FineDiff\Parser\OpcodesInterface $opcodes
      *
      * @return string
@@ -48,7 +51,6 @@ abstract class Renderer implements RendererInterface
         $opcodes_offset = 0;
 
         while ($opcodes_offset < $opcodes_len) {
-
             $opcode = mb_substr($opcodes, $opcodes_offset, 1);
             $opcodes_offset++;
             $n = intval(mb_substr($opcodes, $opcodes_offset));

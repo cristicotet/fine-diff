@@ -1,7 +1,7 @@
 <?php
 
 /**
- * FINE granularity DIFF
+ * FINE granularity DIFF.
  *
  * Computes a set of instructions to convert the content of
  * one string into another.
@@ -11,8 +11,11 @@
  *
  * @copyright Copyright 2011 (c) Raymond Hill (http://raymondhill.net/blog/?p=441)
  * @copyright Copyright 2013 (c) Robert Crowe (http://iphis.com)
+ *
  * @link https://github.com/iphis/FineDiff
+ *
  * @version 0.0.1
+ *
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -50,8 +53,8 @@ class Diff
      * Instantiate a new instance of Diff.
      *
      * @param GranularityInterface $granularity Level of diff.
-     * @param RendererInterface $renderer Diff renderer.
-     * @param ParserInterface $parser Parser used to generate opcodes.
+     * @param RendererInterface    $renderer    Diff renderer.
+     * @param ParserInterface      $parser      Parser used to generate opcodes.
      *
      * @throws Exceptions\GranularityCountException
      * @throws Exceptions\OperationException
@@ -64,10 +67,10 @@ class Diff
         // Set some sensible defaults
 
         // Set the granularity of the diff
-        $this->granularity = ($granularity !== null) ? $granularity : new Character;
+        $this->granularity = ($granularity !== null) ? $granularity : new Character();
 
         // Set the renderer to use when calling Diff::render
-        $this->renderer = ($renderer !== null) ? $renderer : new Html;
+        $this->renderer = ($renderer !== null) ? $renderer : new Html();
 
         // Set the diff parser
         $this->parser = ($parser !== null) ? $parser : new Parser($this->granularity);
@@ -87,6 +90,7 @@ class Diff
      * Set the granularity level of the parser.
      *
      * @param GranularityInterface $granularity
+     *
      * @return void
      */
     public function setGranularity(GranularityInterface $granularity)
@@ -108,6 +112,7 @@ class Diff
      * Set the renderer.
      *
      * @param RendererInterface $renderer
+     *
      * @return void
      */
     public function setRenderer(RendererInterface $renderer)
@@ -129,6 +134,7 @@ class Diff
      * Set the parser.
      *
      * @param ParserInterface $parser
+     *
      * @return void
      */
     public function setParser(ParserInterface $parser)
@@ -144,6 +150,7 @@ class Diff
      *
      * @param string $from_text
      * @param string $to_text
+     *
      * @return OpcodesInterface
      */
     public function getOpcodes($from_text, $to_text)
@@ -158,6 +165,7 @@ class Diff
      *
      * @param string $from_text
      * @param string $to_text
+     *
      * @return string
      */
     public function render($from_text, $to_text)

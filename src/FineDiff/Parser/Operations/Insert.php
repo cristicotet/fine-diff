@@ -1,7 +1,7 @@
 <?php
 
 /**
- * FINE granularity DIFF
+ * FINE granularity DIFF.
  *
  * Computes a set of instructions to convert the content of
  * one string into another.
@@ -11,8 +11,11 @@
  *
  * @copyright Copyright 2011 (c) Raymond Hill (http://raymondhill.net/blog/?p=441)
  * @copyright Copyright 2013 (c) Robert Crowe (http://iphis.com)
+ *
  * @link https://github.com/iphis/FineDiff
+ *
  * @version 0.0.1
+ *
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -39,7 +42,7 @@ class Insert implements OperationInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFromLen()
     {
@@ -47,7 +50,7 @@ class Insert implements OperationInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getToLen()
     {
@@ -55,7 +58,7 @@ class Insert implements OperationInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getText()
     {
@@ -63,7 +66,7 @@ class Insert implements OperationInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getOpcode()
     {
