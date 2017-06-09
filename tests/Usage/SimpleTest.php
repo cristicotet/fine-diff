@@ -2,13 +2,13 @@
 
 namespace FineDiffTests\Usage;
 
-use cogpowered\FineDiff\Diff;
-use cogpowered\FineDiff\Render\Text;
-use cogpowered\FineDiff\Render\Html;
-use cogpowered\FineDiff\Granularity\Character;
-use cogpowered\FineDiff\Granularity\Word;
-use cogpowered\FineDiff\Granularity\Sentence;
-use cogpowered\FineDiff\Granularity\Paragraph;
+use iphis\FineDiff\Diff;
+use iphis\FineDiff\Granularity\Character;
+use iphis\FineDiff\Granularity\Paragraph;
+use iphis\FineDiff\Granularity\Sentence;
+use iphis\FineDiff\Granularity\Word;
+use iphis\FineDiff\Render\Html;
+use iphis\FineDiff\Render\Text;
 
 class SimpleTest extends Base
 {
@@ -19,20 +19,19 @@ class SimpleTest extends Base
         $diff = new Diff(new Character);
         $generated_opcodes = $diff->getOpcodes($from, $to);
 
-
         // Generate opcodes
         $this->assertEquals($generated_opcodes, $opcodes);
 
         // Render to text from opcodes
         $render = new Text;
-        $this->assertEquals( $render->process($from, $generated_opcodes), $to );
+        $this->assertEquals($render->process($from, $generated_opcodes), $to);
 
         // Render to html from opcodes
         $render = new Html;
-        $this->assertEquals( $render->process($from, $generated_opcodes), $html );
+        $this->assertEquals($render->process($from, $generated_opcodes), $html);
 
         // Render
-        $this->assertEquals( $diff->render($from, $to), $html );
+        $this->assertEquals($diff->render($from, $to), $html);
     }
 
     public function testInsertWordGranularity()
@@ -42,20 +41,19 @@ class SimpleTest extends Base
         $diff = new Diff(new Word);
         $generated_opcodes = $diff->getOpcodes($from, $to);
 
-
         // Generate opcodes
         $this->assertEquals($generated_opcodes, $opcodes);
 
         // Render to text from opcodes
         $render = new Text;
-        $this->assertEquals( $render->process($from, $generated_opcodes), $to );
+        $this->assertEquals($render->process($from, $generated_opcodes), $to);
 
         // Render to html from opcodes
         $render = new Html;
-        $this->assertEquals( $render->process($from, $generated_opcodes), $html );
+        $this->assertEquals($render->process($from, $generated_opcodes), $html);
 
         // Render
-        $this->assertEquals( $diff->render($from, $to), $html );
+        $this->assertEquals($diff->render($from, $to), $html);
     }
 
     public function testInsertSentenceGranularity()
@@ -65,20 +63,19 @@ class SimpleTest extends Base
         $diff = new Diff(new Sentence);
         $generated_opcodes = $diff->getOpcodes($from, $to);
 
-
         // Generate opcodes
         $this->assertEquals($generated_opcodes, $opcodes);
 
         // Render to text from opcodes
         $render = new Text;
-        $this->assertEquals( $render->process($from, $generated_opcodes), $to );
+        $this->assertEquals($render->process($from, $generated_opcodes), $to);
 
         // Render to html from opcodes
         $render = new Html;
-        $this->assertEquals( $render->process($from, $generated_opcodes), $html );
+        $this->assertEquals($render->process($from, $generated_opcodes), $html);
 
         // Render
-        $this->assertEquals( $diff->render($from, $to), $html );
+        $this->assertEquals($diff->render($from, $to), $html);
     }
 
     public function testInsertParagraphGranularity()
@@ -88,19 +85,18 @@ class SimpleTest extends Base
         $diff = new Diff(new Paragraph);
         $generated_opcodes = $diff->getOpcodes($from, $to);
 
-
         // Generate opcodes
         $this->assertEquals($generated_opcodes, $opcodes);
 
         // Render to text from opcodes
         $render = new Text;
-        $this->assertEquals( $render->process($from, $generated_opcodes), $to );
+        $this->assertEquals($render->process($from, $generated_opcodes), $to);
 
         // Render to html from opcodes
         $render = new Html;
-        $this->assertEquals( $render->process($from, $generated_opcodes), $html );
+        $this->assertEquals($render->process($from, $generated_opcodes), $html);
 
         // Render
-        $this->assertEquals( $diff->render($from, $to), $html );
+        $this->assertEquals($diff->render($from, $to), $html);
     }
 }

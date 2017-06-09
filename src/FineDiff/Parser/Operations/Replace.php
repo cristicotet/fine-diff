@@ -7,19 +7,29 @@
  * one string into another.
  *
  * Originally created by Raymond Hill (https://github.com/gorhill/PHP-FineDiff), brought up
- * to date by Cog Powered (https://github.com/cogpowered/FineDiff).
+ * to date by Cog Powered (https://github.com/iphis/FineDiff).
  *
  * @copyright Copyright 2011 (c) Raymond Hill (http://raymondhill.net/blog/?p=441)
- * @copyright Copyright 2013 (c) Robert Crowe (http://cogpowered.com)
- * @link https://github.com/cogpowered/FineDiff
+ * @copyright Copyright 2013 (c) Robert Crowe (http://iphis.com)
+ * @link https://github.com/iphis/FineDiff
  * @version 0.0.1
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace cogpowered\FineDiff\Parser\Operations;
+namespace iphis\FineDiff\Parser\Operations;
 
 class Replace implements OperationInterface
 {
+    /**
+     * @var int
+     */
+    protected $fromLen;
+
+    /**
+     * @var string
+     */
+    protected $text;
+
     /**
      * @param int $fromLen
      * @param string $text
@@ -27,7 +37,7 @@ class Replace implements OperationInterface
     public function __construct($fromLen, $text)
     {
         $this->fromLen = $fromLen;
-        $this->text    = $text;
+        $this->text = $text;
     }
 
     /**
@@ -43,7 +53,7 @@ class Replace implements OperationInterface
      */
     public function getToLen()
     {
-        return strlen($this->text);
+        return mb_strlen($this->text);
     }
 
     /**
@@ -67,7 +77,7 @@ class Replace implements OperationInterface
             $del_opcode = "d{$this->fromLen}";
         }
 
-        $to_len = strlen($this->text);
+        $to_len = mb_strlen($this->text);
 
         if ($to_len === 1) {
             return "{$del_opcode}i:{$this->text}";

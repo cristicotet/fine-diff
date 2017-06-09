@@ -2,11 +2,16 @@
 
 namespace FineDiffTests\Render\Text;
 
-use PHPUnit_Framework_TestCase;
-use cogpowered\FineDiff\Render\Text;
+use iphis\FineDiff\Render\Text;
+use PHPUnit\Framework\TestCase;
 
-class CallbackTest extends PHPUnit_Framework_TestCase
+class CallbackTest extends TestCase
 {
+    /**
+     * @var Text
+     */
+    protected $text;
+
     public function setUp()
     {
         $this->text = new Text;

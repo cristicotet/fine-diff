@@ -7,22 +7,27 @@
  * one string into another.
  *
  * Originally created by Raymond Hill (https://github.com/gorhill/PHP-FineDiff), brought up
- * to date by Cog Powered (https://github.com/cogpowered/FineDiff).
+ * to date by Cog Powered (https://github.com/iphis/FineDiff).
  *
  * @copyright Copyright 2011 (c) Raymond Hill (http://raymondhill.net/blog/?p=441)
- * @copyright Copyright 2013 (c) Robert Crowe (http://cogpowered.com)
- * @link https://github.com/cogpowered/FineDiff
+ * @copyright Copyright 2013 (c) Robert Crowe (http://iphis.com)
+ * @link https://github.com/iphis/FineDiff
  * @version 0.0.1
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace cogpowered\FineDiff\Parser\Operations;
+namespace iphis\FineDiff\Parser\Operations;
 
 /**
- * Generates the opcode for a delete operation.
+ * Generates the opcode for a copy operation.
  */
-class Delete implements OperationInterface
+class Copy implements OperationInterface
 {
+    /**
+     * @var int
+     */
+    protected $len;
+
     /**
      * Set the initial length.
      *
@@ -30,7 +35,7 @@ class Delete implements OperationInterface
      */
     public function __construct($len)
     {
-        $this->fromLen = $len;
+        $this->len = $len;
     }
 
     /**
@@ -38,7 +43,7 @@ class Delete implements OperationInterface
      */
     public function getFromLen()
     {
-        return $this->fromLen;
+        return $this->len;
     }
 
     /**
@@ -46,7 +51,7 @@ class Delete implements OperationInterface
      */
     public function getToLen()
     {
-        return 0;
+        return $this->len;
     }
 
     /**
@@ -54,10 +59,21 @@ class Delete implements OperationInterface
      */
     public function getOpcode()
     {
-        if ($this->fromLen === 1) {
-            return 'd';
+        if ($this->len === 1) {
+            return 'c';
         }
 
-        return "d{$this->fromLen}";
+        return "c{$this->len}";
+    }
+
+    /**
+     * Increase the length of the string.
+     *
+     * @param int $size Amount to increase the string length by.
+     * @return int New length
+     */
+    public function increase($size)
+    {
+        return $this->len += $size;
     }
 }

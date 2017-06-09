@@ -2,12 +2,17 @@
 
 namespace FineDiffTests\Granularity;
 
-use PHPUnit_Framework_TestCase;
-use cogpowered\FineDiff\Delimiters;
-use cogpowered\FineDiff\Granularity\Sentence;
+use iphis\FineDiff\Delimiters;
+use iphis\FineDiff\Granularity\Sentence;
+use PHPUnit\Framework\TestCase;
 
-class SentenceTest extends PHPUnit_Framework_TestCase
+class SentenceTest extends TestCase
 {
+    /**
+     * @var Sentence
+     */
+    protected $character;
+
     protected $delimiters = array(
         Delimiters::PARAGRAPH,
         Delimiters::SENTENCE,
@@ -20,8 +25,8 @@ class SentenceTest extends PHPUnit_Framework_TestCase
 
     public function testExtendsAndImplements()
     {
-        $this->assertTrue(is_a($this->character, 'cogpowered\FineDiff\Granularity\Granularity'));
-        $this->assertTrue(is_a($this->character, 'cogpowered\FineDiff\Granularity\GranularityInterface'));
+        $this->assertTrue(is_a($this->character, 'iphis\FineDiff\Granularity\Granularity'));
+        $this->assertTrue(is_a($this->character, 'iphis\FineDiff\Granularity\GranularityInterface'));
         $this->assertTrue(is_a($this->character, 'ArrayAccess'));
         $this->assertTrue(is_a($this->character, 'Countable'));
     }

@@ -2,9 +2,9 @@
 
 namespace FineDiffTests\Usage;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-abstract class Base extends PHPUnit_Framework_TestCase
+abstract class Base extends TestCase
 {
     protected function getFile($file)
     {
@@ -12,7 +12,7 @@ abstract class Base extends PHPUnit_Framework_TestCase
         $txt = explode('==========', $txt);
 
         $from    = trim($txt[0]);
-        $to      = trim($txt[1]);
+        $to = trim($txt[1]);
         $opcodes = trim($txt[2]);
         $html    = trim($txt[3]);
 

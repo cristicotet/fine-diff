@@ -2,15 +2,15 @@
 
 namespace FineDiffTests\Parser\Operations;
 
-use PHPUnit_Framework_TestCase;
-use cogpowered\FineDiff\Parser\Operations\Replace;
+use PHPUnit\Framework\TestCase;
+use iphis\FineDiff\Parser\Operations\Replace;
 
-class ReplaceTest extends PHPUnit_Framework_TestCase
+class ReplaceTest extends TestCase
 {
     public function testImplementsOperationInterface()
     {
         $replace = new Replace('hello', 'world');
-        $this->assertTrue(is_a($replace, 'cogpowered\FineDiff\Parser\Operations\OperationInterface'));
+        $this->assertTrue(is_a($replace, 'iphis\FineDiff\Parser\Operations\OperationInterface'));
     }
 
     public function testGetFromLen()

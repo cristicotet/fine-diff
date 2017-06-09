@@ -2,16 +2,21 @@
 
 namespace FineDiffTests\Parser;
 
-use PHPUnit_Framework_TestCase;
+use iphis\FineDiff\Granularity\Character;
+use iphis\FineDiff\Parser\Parser;
 use Mockery as m;
-use cogpowered\FineDiff\Granularity\Character;
-use cogpowered\FineDiff\Parser\Parser;
+use PHPUnit\Framework\TestCase;
 
-class ParserTest extends PHPUnit_Framework_TestCase
+class ParserTest extends TestCase
 {
+    /**
+     * @var Parser
+     */
+    protected $parser;
+
     public function setUp()
     {
-        $granularity  = new Character;
+        $granularity = new Character;
         $this->parser = new Parser($granularity);
     }
 
@@ -22,18 +27,18 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
     public function testInstanceOf()
     {
-        $this->assertTrue(is_a($this->parser, 'cogpowered\FineDiff\Parser\ParserInterface'));
+        $this->assertTrue(is_a($this->parser, 'iphis\FineDiff\Parser\ParserInterface'));
     }
 
     public function testDefaultOpcodes()
     {
         $opcodes = $this->parser->getOpcodes();
-        $this->assertTrue(is_a($opcodes, 'cogpowered\FineDiff\Parser\OpcodesInterface'));
+        $this->assertTrue(is_a($opcodes, 'iphis\FineDiff\Parser\OpcodesInterface'));
     }
 
     public function testSetOpcodes()
     {
-        $opcodes = m::mock('cogpowered\FineDiff\Parser\Opcodes');
+        $opcodes = m::mock('iphis\FineDiff\Parser\Opcodes');
         $opcodes->shouldReceive('foo')->andReturn('bar');
         $this->parser->setOpcodes($opcodes);
 
@@ -42,11 +47,11 @@ class ParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException cogpowered\FineDiff\Exceptions\GranularityCountException
+     * @expectedException \iphis\FineDiff\Exceptions\GranularityCountException
      */
     public function testParseBadGranularity()
     {
-        $granularity = m::mock('cogpowered\FineDiff\Granularity\Character');
+        $granularity = m::mock('iphis\FineDiff\Granularity\Character');
         $granularity->shouldReceive('count')->andReturn(0);
         $parser = new Parser($granularity);
 
@@ -55,7 +60,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
     public function testParseSetOpcodes()
     {
-        $opcodes = m::mock('cogpowered\FineDiff\Parser\Opcodes');
+        $opcodes = m::mock('iphis\FineDiff\Parser\Opcodes');
         $opcodes->shouldReceive('setOpcodes')->once();
         $this->parser->setOpcodes($opcodes);
 

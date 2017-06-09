@@ -7,51 +7,52 @@
  * one string into another.
  *
  * Originally created by Raymond Hill (https://github.com/gorhill/PHP-FineDiff), brought up
- * to date by Cog Powered (https://github.com/cogpowered/FineDiff).
+ * to date by Cog Powered (https://github.com/iphis/FineDiff).
  *
  * @copyright Copyright 2011 (c) Raymond Hill (http://raymondhill.net/blog/?p=441)
- * @copyright Copyright 2013 (c) Robert Crowe (http://cogpowered.com)
- * @link https://github.com/cogpowered/FineDiff
+ * @copyright Copyright 2013 (c) Robert Crowe (http://iphis.com)
+ * @link https://github.com/iphis/FineDiff
  * @version 0.0.1
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace cogpowered\FineDiff\Parser;
+namespace iphis\FineDiff\Parser;
 
-use cogpowered\FineDiff\Granularity\GranularityInterface;
+use iphis\FineDiff\Exceptions\GranularityCountException;
+use iphis\FineDiff\Granularity\GranularityInterface;
 
 interface ParserInterface
 {
     /**
      * Creates an instance.
      *
-     * @param cogpowered\FineDiff\Granularity\GranularityInterface
+     * @param GranularityInterface $granularity
      */
     public function __construct(GranularityInterface $granularity);
 
     /**
      * Granularity the parser is working with.
      *
-     * Default is cogpowered\FineDiff\Granularity\Character.
+     * Default is Character.
      *
-     * @see cogpowered\FineDiff\Granularity\Character
-     * @see cogpowered\FineDiff\Granularity\Word
-     * @see cogpowered\FineDiff\Granularity\Sentence
-     * @see cogpowered\FineDiff\Granularity\Paragraph
+     * @see Character
+     * @see Word
+     * @see Sentence
+     * @see Paragraph
      *
-     * @return cogpowered\FineDiff\Granularity\GranularityInterface
+     * @return GranularityInterface
      */
     public function getGranularity();
 
     /**
      * Set the granularity that the parser is working with.
      *
-     * @see cogpowered\FineDiff\Granularity\Character
-     * @see cogpowered\FineDiff\Granularity\Word
-     * @see cogpowered\FineDiff\Granularity\Sentence
-     * @see cogpowered\FineDiff\Granularity\Paragraph
+     * @see Character
+     * @see Word
+     * @see Sentence
+     * @see Paragraph
      *
-     * @param cogpowered\FineDiff\Granularity\GranularityInterface
+     * @param GranularityInterface $granularity
      * @return void
      */
     public function setGranularity(GranularityInterface $granularity);
@@ -59,14 +60,14 @@ interface ParserInterface
     /**
      * Get the opcodes object that is used to store all the opcodes.
      *
-     * @return cogpowered\FineDiff\Parser\OpcodesInterface
+     * @return OpcodesInterface
      */
     public function getOpcodes();
 
     /**
      * Set the opcodes object used to store all the opcodes for this parse.
      *
-     * @param cogpowered\FineDiff\Parser\OpcodesInterface $opcodes.
+     * @param OpcodesInterface $opcodes
      * @return void
      */
     public function setOpcodes(OpcodesInterface $opcodes);
@@ -76,8 +77,8 @@ interface ParserInterface
      *
      * @param string $from_text
      * @param string $to_text
-     * @throws cogpowered\FineDiff\Exceptions\GranularityCountException
-     * @return cogpowered\FineDiff\Parser\OpcodesInterface
+     * @throws GranularityCountException
+     * @return OpcodesInterface
      */
     public function parse($from_text, $to_text);
 }

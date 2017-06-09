@@ -2,12 +2,17 @@
 
 namespace FineDiffTests\Granularity;
 
-use PHPUnit_Framework_TestCase;
-use cogpowered\FineDiff\Delimiters;
-use cogpowered\FineDiff\Granularity\Character;
+use iphis\FineDiff\Delimiters;
+use iphis\FineDiff\Granularity\Character;
+use PHPUnit\Framework\TestCase;
 
-class CharacterTest extends PHPUnit_Framework_TestCase
+class CharacterTest extends TestCase
 {
+    /**
+     * @var Character
+     */
+    protected $character;
+
     protected $delimiters = array(
         Delimiters::PARAGRAPH,
         Delimiters::SENTENCE,
@@ -17,13 +22,13 @@ class CharacterTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->character = new Character;
+        $this->character = new Character();
     }
 
     public function testExtendsAndImplements()
     {
-        $this->assertTrue(is_a($this->character, 'cogpowered\FineDiff\Granularity\Granularity'));
-        $this->assertTrue(is_a($this->character, 'cogpowered\FineDiff\Granularity\GranularityInterface'));
+        $this->assertTrue(is_a($this->character, 'iphis\FineDiff\Granularity\Granularity'));
+        $this->assertTrue(is_a($this->character, 'iphis\FineDiff\Granularity\GranularityInterface'));
         $this->assertTrue(is_a($this->character, 'ArrayAccess'));
         $this->assertTrue(is_a($this->character, 'Countable'));
     }
@@ -79,7 +84,7 @@ class CharacterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(count($this->character), count($this->delimiters) + 1);
 
         // Unset
-        unset($this->character[ count($this->delimiters) ]);
+        unset($this->character[count($this->delimiters)]);
         $this->assertEquals(count($this->character), count($this->delimiters));
     }
 }

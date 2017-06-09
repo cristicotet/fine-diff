@@ -7,23 +7,24 @@
  * one string into another.
  *
  * Originally created by Raymond Hill (https://github.com/gorhill/PHP-FineDiff), brought up
- * to date by Cog Powered (https://github.com/cogpowered/FineDiff).
+ * to date by Cog Powered (https://github.com/iphis/FineDiff).
  *
  * @copyright Copyright 2011 (c) Raymond Hill (http://raymondhill.net/blog/?p=441)
- * @copyright Copyright 2013 (c) Robert Crowe (http://cogpowered.com)
- * @link https://github.com/cogpowered/FineDiff
+ * @copyright Copyright 2013 (c) Robert Crowe (http://iphis.com)
+ * @link https://github.com/iphis/FineDiff
  * @version 0.0.1
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace cogpowered\FineDiff;
+namespace iphis\FineDiff;
 
-use cogpowered\FineDiff\Granularity\GranularityInterface;
-use cogpowered\FineDiff\Render\RendererInterface;
-use cogpowered\FineDiff\Parser\ParserInterface;
-use cogpowered\FineDiff\Granularity\Character;
-use cogpowered\FineDiff\Render\Html;
-use cogpowered\FineDiff\Parser\Parser;
+use iphis\FineDiff\Granularity\Character;
+use iphis\FineDiff\Granularity\GranularityInterface;
+use iphis\FineDiff\Parser\OpcodesInterface;
+use iphis\FineDiff\Parser\Parser;
+use iphis\FineDiff\Parser\ParserInterface;
+use iphis\FineDiff\Render\Html;
+use iphis\FineDiff\Render\RendererInterface;
 
 /**
  * Diff class.
@@ -31,32 +32,35 @@ use cogpowered\FineDiff\Parser\Parser;
 class Diff
 {
     /**
-     * @var cogpowered\FineDiff\Granularity\GranularityInterface
+     * @var GranularityInterface
      */
     protected $granularity;
 
     /**
-     * @var cogpowered\FineDiff\Render\RendererInterface
+     * @var RendererInterface
      */
     protected $renderer;
 
     /**
-     * @var cogpowered\FineDiff\Parser\ParserInterface
+     * @var ParserInterface
      */
     protected $parser;
 
     /**
      * Instantiate a new instance of Diff.
      *
-     * @param cogpowered\FineDiff\Granularity\GranularityInterface $granularity Level of diff.
-     * @param cogpowered\FineDiff\Render\RenderInterface           $renderer    Diff renderer.
-     * @param cogpowered\FineDiff\Parser\ParserInterface           $parser      Parser used to generate opcodes.
+     * @param GranularityInterface $granularity Level of diff.
+     * @param RendererInterface $renderer Diff renderer.
+     * @param ParserInterface $parser Parser used to generate opcodes.
      *
-     * @throws cogpowered\FineDiff\Exceptions\GranularityCountException
-     * @throws cogpowered\FineDiff\Exceptions\OperationException
+     * @throws Exceptions\GranularityCountException
+     * @throws Exceptions\OperationException
      */
-    public function __construct(GranularityInterface $granularity = null, RendererInterface $renderer = null, ParserInterface $parser = null)
-    {
+    public function __construct(
+        GranularityInterface $granularity = null,
+        RendererInterface $renderer = null,
+        ParserInterface $parser = null
+    ) {
         // Set some sensible defaults
 
         // Set the granularity of the diff
@@ -72,7 +76,7 @@ class Diff
     /**
      * Returns the granularity object used by the parser.
      *
-     * @return @cogpowered\FineDiff\Granularity\GranularityInterface
+     * @return GranularityInterface
      */
     public function getGranularity()
     {
@@ -82,7 +86,7 @@ class Diff
     /**
      * Set the granularity level of the parser.
      *
-     * @param cogpowered\FineDiff\Granularity\GranularityInterface $granularity
+     * @param GranularityInterface $granularity
      * @return void
      */
     public function setGranularity(GranularityInterface $granularity)
@@ -93,7 +97,7 @@ class Diff
     /**
      * Get the render.
      *
-     * @return cogpowered\FineDiff\Render\RendererInterface
+     * @return RendererInterface
      */
     public function getRenderer()
     {
@@ -103,7 +107,7 @@ class Diff
     /**
      * Set the renderer.
      *
-     * @param cogpowered\FineDiff\Render\RendererInterface $renderer
+     * @param RendererInterface $renderer
      * @return void
      */
     public function setRenderer(RendererInterface $renderer)
@@ -114,7 +118,7 @@ class Diff
     /**
      * Get the parser responsible for generating the diff/opcodes.
      *
-     * @return cogpowered\FineDiff\Parser\ParserInterface
+     * @return ParserInterface
      */
     public function getParser()
     {
@@ -124,7 +128,7 @@ class Diff
     /**
      * Set the parser.
      *
-     * @param cogpowered\FineDiff\Parser\ParserInterface $parser
+     * @param ParserInterface $parser
      * @return void
      */
     public function setParser(ParserInterface $parser)
@@ -138,7 +142,9 @@ class Diff
      * Returns the opcode diff which can be used for example, to
      * to generate a HTML report of the differences.
      *
-     * @return cogpowered\FineDiff\Parser\Opcodes
+     * @param string $from_text
+     * @param string $to_text
+     * @return OpcodesInterface
      */
     public function getOpcodes($from_text, $to_text)
     {

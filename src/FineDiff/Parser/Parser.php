@@ -7,23 +7,24 @@
  * one string into another.
  *
  * Originally created by Raymond Hill (https://github.com/gorhill/PHP-FineDiff), brought up
- * to date by Cog Powered (https://github.com/cogpowered/FineDiff).
+ * to date by Cog Powered (https://github.com/iphis/FineDiff).
  *
  * @copyright Copyright 2011 (c) Raymond Hill (http://raymondhill.net/blog/?p=441)
- * @copyright Copyright 2013 (c) Robert Crowe (http://cogpowered.com)
- * @link https://github.com/cogpowered/FineDiff
+ * @copyright Copyright 2013 (c) Robert Crowe (http://iphis.com)
+ * @link https://github.com/iphis/FineDiff
  * @version 0.0.1
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace cogpowered\FineDiff\Parser;
+namespace iphis\FineDiff\Parser;
 
-use cogpowered\FineDiff\Granularity\GranularityInterface;
-use cogpowered\FineDiff\Exceptions\GranularityCountException;
-use cogpowered\FineDiff\Parser\Operations\Copy;
-use cogpowered\FineDiff\Parser\Operations\Delete;
-use cogpowered\FineDiff\Parser\Operations\Insert;
-use cogpowered\FineDiff\Parser\Operations\Replace;
+use iphis\FineDiff\Exceptions\GranularityCountException;
+use iphis\FineDiff\Granularity\GranularityInterface;
+use iphis\FineDiff\Parser\Operations\Copy;
+use iphis\FineDiff\Parser\Operations\Delete;
+use iphis\FineDiff\Parser\Operations\Insert;
+use iphis\FineDiff\Parser\Operations\OperationInterface;
+use iphis\FineDiff\Parser\Operations\Replace;
 
 /**
  * Generates a set of instructions to convert one string to another.
@@ -31,12 +32,12 @@ use cogpowered\FineDiff\Parser\Operations\Replace;
 class Parser implements ParserInterface
 {
     /**
-     * @var cogpowered\FineDiff\GranularityInterface
+     * @var GranularityInterface
      */
     protected $granularity;
 
     /**
-     * @var cogpowered\FineDiff\Parser\OpcodesInterface
+     * @var OpcodesInterface
      */
     protected $opcodes;
 
@@ -51,7 +52,7 @@ class Parser implements ParserInterface
     protected $from_offset = 0;
 
     /**
-     * @var cogpowered\FineDiff\Operations\OperationInterface
+     * @var OperationInterface
      */
     protected $last_edit;
 
@@ -119,17 +120,18 @@ class Parser implements ParserInterface
         }
 
         // Reset internal parser properties
-        $this->from_text    = $from_text;
-        $this->from_offset  = 0;
-        $this->last_edit    = null;
+        $this->from_text = $from_text;
+        $this->from_offset = 0;
+        $this->last_edit = null;
         $this->stackpointer = 0;
-        $this->edits        = array();
+        $this->edits = array();
 
         // Parse the two string
         $this->process($from_text, $to_text);
 
         // Return processed diff
         $this->opcodes->setOpcodes($this->edits);
+
         return $this->opcodes;
     }
 
@@ -143,7 +145,7 @@ class Parser implements ParserInterface
     protected function process($from_text, $to_text)
     {
         // Lets get parsing
-        $delimiters     = $this->granularity[$this->stackpointer++];
+        $delimiters = $this->granularity[$this->stackpointer++];
         $has_next_stage = $this->stackpointer < count($this->granularity);
 
         // Actually perform diff
@@ -155,16 +157,14 @@ class Parser implements ParserInterface
             // increase granularity
             if ($fragment instanceof Replace && $has_next_stage) {
                 $this->process(
-                    substr($this->from_text, $this->from_offset, $fragment->getFromLen()),
+                    mb_substr($this->from_text, $this->from_offset, $fragment->getFromLen()),
                     $fragment->getText()
                 );
-            }
-            // fuse copy ops whenever possible
+            } // fuse copy ops whenever possible
             elseif ($fragment instanceof Copy && $this->last_edit instanceof Copy) {
-                $this->edits[count($this->edits)-1]->increase($fragment->getFromLen());
+                $this->edits[count($this->edits) - 1]->increase($fragment->getFromLen());
                 $this->from_offset += $fragment->getFromLen();
-            }
-            else {
+            } else {
                 /* $fragment instanceof Copy */
                 /* $fragment instanceof Delete */
                 /* $fragment instanceof Insert */
@@ -195,14 +195,13 @@ class Parser implements ParserInterface
         $result = array();
 
         // fragment-level diffing
-        $from_text_len  = strlen($from_text);
-        $to_text_len    = strlen($to_text);
+        $from_text_len = mb_strlen($from_text);
+        $to_text_len = mb_strlen($to_text);
         $from_fragments = $this->extractFragments($from_text, $delimiters);
-        $to_fragments   = $this->extractFragments($to_text, $delimiters);
+        $to_fragments = $this->extractFragments($to_text, $delimiters);
 
-        $jobs              = array(array(0, $from_text_len, 0, $to_text_len));
+        $jobs = array(array(0, $from_text_len, 0, $to_text_len));
         $cached_array_keys = array();
-
 
         while ($job = array_pop($jobs)) {
 
@@ -211,14 +210,18 @@ class Parser implements ParserInterface
 
             // catch easy cases first
             $from_segment_length = $from_segment_end - $from_segment_start;
-            $to_segment_length   = $to_segment_end - $to_segment_start;
+            $to_segment_length = $to_segment_end - $to_segment_start;
 
-            if (!$from_segment_length || !$to_segment_length ) {
+            if (!$from_segment_length || !$to_segment_length) {
 
-                if ( $from_segment_length ) {
+                if ($from_segment_length) {
                     $result[$from_segment_start * 4] = new Delete($from_segment_length);
-                } else if ( $to_segment_length ) {
-                    $result[$from_segment_start * 4 + 1] = new Insert(substr($to_text, $to_segment_start, $to_segment_length));
+                } else {
+                    if ($to_segment_length) {
+                        $result[$from_segment_start * 4 + 1] = new Insert(
+                            mb_substr($to_text, $to_segment_start, $to_segment_length)
+                        );
+                    }
                 }
 
                 continue;
@@ -230,18 +233,21 @@ class Parser implements ParserInterface
             $from_base_fragment_index = $from_segment_start;
             $cached_array_keys_for_current_segment = array();
 
-            while ( $from_base_fragment_index < $from_segment_end ) {
+            while ($from_base_fragment_index < $from_segment_end) {
 
-                $from_base_fragment        = $from_fragments[$from_base_fragment_index];
-                $from_base_fragment_length = strlen($from_base_fragment);
+                $from_base_fragment = $from_fragments[$from_base_fragment_index];
+                $from_base_fragment_length = mb_strlen($from_base_fragment);
 
                 // performance boost: cache array keys
                 if (!isset($cached_array_keys_for_current_segment[$from_base_fragment])) {
 
-                    if ( !isset($cached_array_keys[$from_base_fragment]) ) {
-                        $to_all_fragment_indices = $cached_array_keys[$from_base_fragment] = array_keys($to_fragments, $from_base_fragment, true);
-                    }
-                    else {
+                    if (!isset($cached_array_keys[$from_base_fragment])) {
+                        $to_all_fragment_indices = $cached_array_keys[$from_base_fragment] = array_keys(
+                            $to_fragments,
+                            $from_base_fragment,
+                            true
+                        );
+                    } else {
                         $to_all_fragment_indices = $cached_array_keys[$from_base_fragment];
                     }
 
@@ -264,11 +270,9 @@ class Parser implements ParserInterface
                         }
 
                         $cached_array_keys_for_current_segment[$from_base_fragment] = $to_fragment_indices;
-
                     } else {
                         $to_fragment_indices = $to_all_fragment_indices;
                     }
-
                 } else {
                     $to_fragment_indices = $cached_array_keys_for_current_segment[$from_base_fragment];
                 }
@@ -279,7 +283,7 @@ class Parser implements ParserInterface
                     $fragment_index_offset = $from_base_fragment_length;
 
                     // iterate until no more match
-                    for (;;) {
+                    for (; ;) {
 
                         $fragment_from_index = $from_base_fragment_index + $fragment_index_offset;
 
@@ -297,18 +301,18 @@ class Parser implements ParserInterface
                             break;
                         }
 
-                        $fragment_length = strlen($from_fragments[$fragment_from_index]);
+                        $fragment_length = mb_strlen($from_fragments[$fragment_from_index]);
                         $fragment_index_offset += $fragment_length;
                     }
 
                     if ($fragment_index_offset > $best_copy_length) {
                         $best_copy_length = $fragment_index_offset;
-                        $best_from_start  = $from_base_fragment_index;
-                        $best_to_start    = $to_base_fragment_index;
+                        $best_from_start = $from_base_fragment_index;
+                        $best_to_start = $to_base_fragment_index;
                     }
                 }
 
-                $from_base_fragment_index += strlen($from_base_fragment);
+                $from_base_fragment_index += mb_strlen($from_base_fragment);
 
                 // If match is larger than half segment size, no point trying to find better
                 // TODO: Really?
@@ -318,21 +322,30 @@ class Parser implements ParserInterface
 
                 // no point to keep looking if what is left is less than
                 // current best match
-                if ( $from_base_fragment_index + $best_copy_length >= $from_segment_end ) {
+                if ($from_base_fragment_index + $best_copy_length >= $from_segment_end) {
                     break;
                 }
             }
 
-            if ($best_copy_length) {
+            if ($best_copy_length && isset($best_from_start) && isset($best_to_start)) {
                 $jobs[] = array($from_segment_start, $best_from_start, $to_segment_start, $best_to_start);
                 $result[$best_from_start * 4 + 2] = new Copy($best_copy_length);
-                $jobs[] = array($best_from_start + $best_copy_length, $from_segment_end, $best_to_start + $best_copy_length, $to_segment_end);
+                $jobs[] = array(
+                    $best_from_start + $best_copy_length,
+                    $from_segment_end,
+                    $best_to_start + $best_copy_length,
+                    $to_segment_end,
+                );
             } else {
-                $result[$from_segment_start * 4 ] = new Replace($from_segment_length, substr($to_text, $to_segment_start, $to_segment_length));
+                $result[$from_segment_start * 4] = new Replace(
+                    $from_segment_length,
+                    mb_substr($to_text, $to_segment_start, $to_segment_length)
+                );
             }
         }
 
         ksort($result, SORT_NUMERIC);
+
         return array_values($result);
     }
 
@@ -346,7 +359,7 @@ class Parser implements ParserInterface
     protected function charDiff($from_text, $to_text)
     {
         $result = array();
-        $jobs   = array(array(0, strlen($from_text), 0, strlen($to_text)));
+        $jobs = array(array(0, mb_strlen($from_text), 0, mb_strlen($to_text)));
 
         while ($job = array_pop($jobs)) {
 
@@ -354,15 +367,19 @@ class Parser implements ParserInterface
             list($from_segment_start, $from_segment_end, $to_segment_start, $to_segment_end) = $job;
 
             $from_segment_len = $from_segment_end - $from_segment_start;
-            $to_segment_len   = $to_segment_end - $to_segment_start;
+            $to_segment_len = $to_segment_end - $to_segment_start;
 
             // catch easy cases first
             if (!$from_segment_len || !$to_segment_len) {
 
                 if ($from_segment_len) {
                     $result[$from_segment_start * 4 + 0] = new Delete($from_segment_len);
-                } else if ( $to_segment_len ) {
-                    $result[$from_segment_start * 4 + 1] = new Insert(substr($to_text, $to_segment_start, $to_segment_len));
+                } else {
+                    if ($to_segment_len) {
+                        $result[$from_segment_start * 4 + 1] = new Insert(
+                            mb_substr($to_text, $to_segment_start, $to_segment_len)
+                        );
+                    }
                 }
 
                 continue;
@@ -374,12 +391,15 @@ class Parser implements ParserInterface
 
                 while ($copy_len) {
 
-                    $to_copy_start     = $to_segment_start;
+                    $to_copy_start = $to_segment_start;
                     $to_copy_start_max = $to_segment_end - $copy_len;
 
                     while ($to_copy_start <= $to_copy_start_max) {
 
-                        $from_copy_start = strpos(substr($from_text, $from_segment_start, $from_segment_len), substr($to_text, $to_copy_start, $copy_len));
+                        $from_copy_start = mb_strpos(
+                            mb_substr($from_text, $from_segment_start, $from_segment_len),
+                            mb_substr($to_text, $to_copy_start, $copy_len)
+                        );
 
                         if ($from_copy_start !== false) {
                             $from_copy_start += $from_segment_start;
@@ -397,12 +417,15 @@ class Parser implements ParserInterface
 
                 while ($copy_len) {
 
-                    $from_copy_start     = $from_segment_start;
+                    $from_copy_start = $from_segment_start;
                     $from_copy_start_max = $from_segment_end - $copy_len;
 
                     while ($from_copy_start <= $from_copy_start_max) {
 
-                        $to_copy_start = strpos(substr($to_text, $to_segment_start, $to_segment_len), substr($from_text, $from_copy_start, $copy_len));
+                        $to_copy_start = mb_strpos(
+                            mb_substr($to_text, $to_segment_start, $to_segment_len),
+                            mb_substr($from_text, $from_copy_start, $copy_len)
+                        );
 
                         if ($to_copy_start !== false) {
                             $to_copy_start += $to_segment_start;
@@ -417,47 +440,56 @@ class Parser implements ParserInterface
             }
 
             // match found
-            if ( $copy_len ) {
+            if ($copy_len && isset($from_copy_start) && isset($to_copy_start)) {
                 $jobs[] = array($from_segment_start, $from_copy_start, $to_segment_start, $to_copy_start);
                 $result[$from_copy_start * 4 + 2] = new Copy($copy_len);
-                $jobs[] = array($from_copy_start + $copy_len, $from_segment_end, $to_copy_start + $copy_len, $to_segment_end);
-            }
-            // no match,  so delete all, insert all
+                $jobs[] = array(
+                    $from_copy_start + $copy_len,
+                    $from_segment_end,
+                    $to_copy_start + $copy_len,
+                    $to_segment_end,
+                );
+            } // no match,  so delete all, insert all
             else {
-                $result[$from_segment_start * 4] = new Replace($from_segment_len, substr($to_text, $to_segment_start, $to_segment_len));
+                $result[$from_segment_start * 4] = new Replace(
+                    $from_segment_len,
+                    mb_substr($to_text, $to_segment_start, $to_segment_len)
+                );
             }
         }
 
         ksort($result, SORT_NUMERIC);
+
         return array_values($result);
     }
 
     /**
-    * Efficiently fragment the text into an array according to specified delimiters.
-    *
-    * No delimiters means fragment into single character. The array indices are the offset of the fragments into
-    * the input string. A sentinel empty fragment is always added at the end.
-    * Careful: No check is performed as to the validity of the delimiters.
-    *
-    * @param string $text
-    * @param string $delimiters
-    * @param array
-    */
+     * Efficiently fragment the text into an array according to specified delimiters.
+     *
+     * No delimiters means fragment into single character. The array indices are the offset of the fragments into
+     * the input string. A sentinel empty fragment is always added at the end.
+     * Careful: No check is performed as to the validity of the delimiters.
+     *
+     * @param string $text
+     * @param string $delimiters
+     *
+     * @return array
+     */
     protected function extractFragments($text, $delimiters)
     {
         // special case: split into characters
         if (empty($delimiters)) {
-            $chars                = str_split($text, 1);
-            $chars[strlen($text)] = '';
+            $chars = str_split($text, 1);
+            $chars[mb_strlen($text)] = '';
 
             return $chars;
         }
 
         $fragments = array();
-        $start     = 0;
-        $end       = 0;
+        $start = 0;
+        $end = 0;
 
-        for (;;) {
+        for (; ;) {
 
             $end += strcspn($text, $delimiters, $end);
             $end += strspn($text, $delimiters, $end);
@@ -466,8 +498,8 @@ class Parser implements ParserInterface
                 break;
             }
 
-            $fragments[$start] = substr($text, $start, $end - $start);
-            $start             = $end;
+            $fragments[$start] = mb_substr($text, $start, $end - $start);
+            $start = $end;
         }
 
         $fragments[$start] = '';

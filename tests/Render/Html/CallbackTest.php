@@ -2,11 +2,16 @@
 
 namespace FineDiffTests\Render\Html;
 
-use PHPUnit_Framework_TestCase;
-use cogpowered\FineDiff\Render\Html;
+use iphis\FineDiff\Render\Html;
+use PHPUnit\Framework\TestCase;
 
-class CallbackTest extends PHPUnit_Framework_TestCase
+class CallbackTest extends TestCase
 {
+    /**
+     * @var  Html
+     */
+    protected $html;
+
     public function setUp()
     {
         $this->html = new Html;

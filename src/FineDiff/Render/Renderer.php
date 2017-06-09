@@ -7,27 +7,27 @@
  * one string into another.
  *
  * Originally created by Raymond Hill (https://github.com/gorhill/PHP-FineDiff), brought up
- * to date by Cog Powered (https://github.com/cogpowered/FineDiff).
+ * to date by Cog Powered (https://github.com/iphis/FineDiff).
  *
  * @copyright Copyright 2011 (c) Raymond Hill (http://raymondhill.net/blog/?p=441)
- * @copyright Copyright 2013 (c) Robert Crowe (http://cogpowered.com)
- * @link https://github.com/cogpowered/FineDiff
+ * @copyright Copyright 2013 (c) Robert Crowe (http://iphis.com)
+ * @link https://github.com/iphis/FineDiff
  * @version 0.0.1
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace cogpowered\FineDiff\Render;
+namespace iphis\FineDiff\Render;
 
-use cogpowered\FineDiff\Parser\OpcodesInterface;
 use InvalidArgumentException;
+use iphis\FineDiff\Parser\OpcodesInterface;
 
 abstract class Renderer implements RendererInterface
 {
     /**
      * Covert text based on the provided opcodes.
      *
-     * @param string                                              $from_text
-     * @param string|\cogpowered\FineDiff\Parser\OpcodesInterface $opcodes
+     * @param string $from_text
+     * @param string|\iphis\FineDiff\Parser\OpcodesInterface $opcodes
      *
      * @return string
      */
@@ -43,18 +43,18 @@ abstract class Renderer implements RendererInterface
         // Holds the generated string that is returned
         $output = '';
 
-        $opcodes_len    = strlen($opcodes);
-        $from_offset    = 0;
+        $opcodes_len = mb_strlen($opcodes);
+        $from_offset = 0;
         $opcodes_offset = 0;
 
         while ($opcodes_offset < $opcodes_len) {
 
-            $opcode = substr($opcodes, $opcodes_offset, 1);
+            $opcode = mb_substr($opcodes, $opcodes_offset, 1);
             $opcodes_offset++;
-            $n = intval(substr($opcodes, $opcodes_offset));
+            $n = intval(mb_substr($opcodes, $opcodes_offset));
 
             if ($n) {
-                $opcodes_offset += strlen(strval($n));
+                $opcodes_offset += mb_strlen(strval($n));
             } else {
                 $n = 1;
             }
@@ -63,14 +63,16 @@ abstract class Renderer implements RendererInterface
                 // copy n characters from source
                 $data = $this->callback('c', $from_text, $from_offset, $n);
                 $from_offset += $n;
-            } else if ($opcode === 'd') {
-                // delete n characters from source
-                $data = $this->callback('d', $from_text, $from_offset, $n);
-                $from_offset += $n;
-            } else /* if ( $opcode === 'i' ) */ {
-                // insert n characters from opcodes
-                $data = $this->callback('i', $opcodes, $opcodes_offset + 1, $n);
-                $opcodes_offset += 1 + $n;
+            } else {
+                if ($opcode === 'd') {
+                    // delete n characters from source
+                    $data = $this->callback('d', $from_text, $from_offset, $n);
+                    $from_offset += $n;
+                } else /* if ( $opcode === 'i' ) */ {
+                    // insert n characters from opcodes
+                    $data = $this->callback('i', $opcodes, $opcodes_offset + 1, $n);
+                    $opcodes_offset += 1 + $n;
+                }
             }
 
             $output .= $data;

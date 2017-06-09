@@ -2,12 +2,17 @@
 
 namespace FineDiffTests\Render\Html;
 
-use PHPUnit_Framework_TestCase;
+use iphis\FineDiff\Render\Html;
 use Mockery as m;
-use cogpowered\FineDiff\Render\Html;
+use PHPUnit\Framework\TestCase;
 
-class ProcessTest extends PHPUnit_Framework_TestCase
+class ProcessTest extends TestCase
 {
+    /**
+     * @var Html
+     */
+    protected $html;
+
     public function setUp()
     {
         $this->html = new Html;
@@ -20,7 +25,7 @@ class ProcessTest extends PHPUnit_Framework_TestCase
 
     public function testProcess()
     {
-        $opcodes = m::mock('cogpowered\FineDiff\Parser\Opcodes');
+        $opcodes = m::mock('iphis\FineDiff\Parser\Opcodes');
         $opcodes->shouldReceive('generate')->andReturn('c5i:2c6d')->once();
 
         $html = $this->html->process('Hello worlds', $opcodes);
