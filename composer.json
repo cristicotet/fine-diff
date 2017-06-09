@@ -3,6 +3,7 @@
   "description": "PHP implementation of a Fine granularity Diff engine",
   "homepage": "https://github.com/iphis/FineDiff",
   "license": "MIT",
+  "version": "0.4.0",
   "keywords": [
     "finediff",
     "diff",

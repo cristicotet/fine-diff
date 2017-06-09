@@ -3,7 +3,8 @@ FineDiff
 
 Originally written by Raymond Hill ([https://github.com/gorhill/PHP-FineDiff](https://github.com/gorhill/PHP-FineDiff)) and tweaked to bring it up to date with the modern world by Rob Crowe (https://github.com/cogpowered/FineDiff) FineDiff has been updated to PHP 7 and mb_string.
 
-[![Build Status](https://travis-ci.org/iphis/FineDiff.png?branch=master)](https://travis-ci.org/iphis/FineDiff)
+[![Build Status](https://travis-ci.org/iphis/FineDiff.svg?branch=master)](https://travis-ci.org/iphis/FineDiff)
+[![StyleCI](https://styleci.io/repos/93868901/shield?branch=master)](https://styleci.io/repos/93868901)
 
 Installation
 ------------
