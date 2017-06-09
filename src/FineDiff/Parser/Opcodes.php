@@ -1,7 +1,7 @@
 <?php
 
 /**
- * FINE granularity DIFF
+ * FINE granularity DIFF.
  *
  * Computes a set of instructions to convert the content of
  * one string into another.
@@ -11,8 +11,11 @@
  *
  * @copyright Copyright 2011 (c) Raymond Hill (http://raymondhill.net/blog/?p=441)
  * @copyright Copyright 2013 (c) Robert Crowe (http://iphis.com)
+ *
  * @link https://github.com/iphis/FineDiff
+ *
  * @version 0.0.1
+ *
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -31,7 +34,7 @@ class Opcodes implements OpcodesInterface
     protected $opcodes = array();
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getOpcodes()
     {
@@ -39,7 +42,7 @@ class Opcodes implements OpcodesInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setOpcodes(array $opcodes)
     {
@@ -57,7 +60,7 @@ class Opcodes implements OpcodesInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function generate()
     {
@@ -65,7 +68,7 @@ class Opcodes implements OpcodesInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __toString()
     {
