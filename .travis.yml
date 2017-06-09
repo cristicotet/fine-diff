@@ -13,6 +13,6 @@ matrix:
 
 before_script:
   - curl -s https://getcomposer.org/installer | php
-  - php ./composer.phar install --dev --prefer-source
+  - php ./composer.phar install --dev
 
 script: phpunit --configuration phpunit.xml.dist
