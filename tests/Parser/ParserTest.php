@@ -42,8 +42,8 @@ class ParserTest extends TestCase
         $opcodes->shouldReceive('foo')->andReturn('bar');
         $this->parser->setOpcodes($opcodes);
 
-        $opcodes2 = $this->parser->getOpcodes();
-        $this->assertEquals($opcodes2->foo(), 'bar');
+        $opcodes = $this->parser->getOpcodes();
+        $this->assertEquals($opcodes->foo(), 'bar');
     }
 
     /**
@@ -62,8 +62,10 @@ class ParserTest extends TestCase
     {
         $opcodes = m::mock('iphis\FineDiff\Parser\Opcodes');
         $opcodes->shouldReceive('setOpcodes')->once();
+        $opcodes->shouldReceive('getOpcodes')->once()->andReturnValues([true]);
         $this->parser->setOpcodes($opcodes);
 
-        $this->parser->parse('Hello worlds', 'Hello2 world');
+        $result = $this->parser->parse('Hello worlds', 'Hello2 world');
+        $this->assertEquals(true, $result->getOpcodes());
     }
 }

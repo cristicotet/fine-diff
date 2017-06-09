@@ -49,7 +49,7 @@ class DependencyInjectTest extends TestCase
         $html->shouldReceive('process')->with('hello', $opcodes)->once()->andReturnValues([true]);
 
         $diff = new Diff(null, $html, $parser);
-        $diff->render('hello', 'hello2');
+        $result = $diff->render('hello', 'hello2');
 
         $this->assertSame(true, $result);
     }
@@ -62,7 +62,8 @@ class DependencyInjectTest extends TestCase
         $diff = new Diff(null, null, $parser);
         $parser = $diff->getParser();
 
-        $parser->justTesting();
+        $result = $parser->justTesting();
+        $this->assertSame(true, $result);
     }
 
     public function testGetOpcodes()
@@ -71,6 +72,8 @@ class DependencyInjectTest extends TestCase
         $parser->shouldReceive('parse')->with('foobar', 'eggfooba')->once()->andReturnValues([true]);
 
         $diff = new Diff(null, null, $parser);
-        $diff->getOpcodes('foobar', 'eggfooba');
+        $result = $diff->getOpcodes('foobar', 'eggfooba');
+
+        $this->assertSame(true, $result);
     }
 }
