@@ -22,4 +22,4 @@ before_script:
     - if [ "$dependencies" = "highest" ]; then composer update -n; fi;
 
 script:
-    - phpunit
+    - vendor/bin/phpunit
