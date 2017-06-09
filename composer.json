@@ -17,7 +17,7 @@
     },
     {
       "name": "Rob Crowe",
-      "email": "rob@iphis.com"
+      "email": "rob@cogpowered.com"
     },
     {
       "name": "Tobias Knipping",
@@ -29,12 +29,13 @@
     "php": ">=5.6"
   },
   "require-dev": {
-    "mockery/mockery": "*",
-    "phpunit/phpunit": "*"
+    "mockery/mockery": "^0.9",
+    "phpunit/phpunit": "^6.2"
   },
   "autoload": {
     "psr-4": {
       "iphis\\": "src/"
     }
-  }
+  },
+  "minimum-stability": "stable"
 }

@@ -42,8 +42,8 @@ class ParserTest extends TestCase
         $opcodes->shouldReceive('foo')->andReturn('bar');
         $this->parser->setOpcodes($opcodes);
 
-        $opcodes = $this->parser->getOpcodes();
-        $this->assertEquals($opcodes->foo(), 'bar');
+        $opcodes2 = $this->parser->getOpcodes();
+        $this->assertEquals($opcodes2->foo(), 'bar');
     }
 
     /**
